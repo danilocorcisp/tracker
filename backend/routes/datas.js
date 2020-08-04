@@ -1,0 +1,56 @@
+const router = require("express").Router();
+let Data = require("../models/data");
+
+router.route("/").get((req, res) => {
+    Data.find()
+        .then((datas) => res.json(datas))
+        .catch((err) => res.status(400).json("Error:" + err));
+});
+
+router.route("/add").post((req, res) => {
+    const username = req.body.username;
+    const description = req.body.description;
+    const duration = Number(req.body.duration);
+    const date = Date.parse(req.body.date);
+
+    const newData = new Data({
+        username,
+        description,
+        duration,
+        date,
+    });
+
+    newData
+        .save()
+        .then(() => res.json("Data added!"))
+        .catch((err) => res.status(400).json("Error: " + err));
+});
+
+router.route("/:id").get((req, res) => {
+    Data.findById(req.params.id)
+        .then((data) => res.json(data))
+        .catch((err) => res.status(400).json("Error: " + err));
+});
+
+router.route("/:id").delete((req, res) => {
+    Data.findByIdAndDelete(req.params.id)
+        .then(() => res.json("Deleted"))
+        .catch((err) => res.status(400).json("Error: " + err));
+});
+
+router.route("/update/:id").post((req, res) => {
+    Data.findById(req.params.id)
+        .then((data) => {
+            data.username = req.body.username;
+            data.description = req.body.description;
+            data.duration = Number(req.body.duration);
+            data.date = Date.parse(req.body.date);
+
+            data.save()
+                .then(() => res.json("Updated"))
+                .catch((err) => res.status(400).json("Error: " + err));
+        })
+        .catch((err) => res.status(400).json("Error: " + err));
+});
+
+module.exports = router;
