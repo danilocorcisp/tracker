@@ -12,6 +12,7 @@ const port = process.env.PORT || 5000;
 const datasRouter = require("./routes/datas");
 const usersRouter = require("./routes/users");
 const authRouter = require("./routes/auth");
+const profileRouter = require("./routes/insert");
 
 //MIDDLEWARES
 
@@ -36,6 +37,7 @@ connection.once("open", () => {
 app.use("/datas", datasRouter);
 app.use("/users", usersRouter);
 app.use("/bepart", authRouter);
+app.use("/profile", profileRouter);
 
 app.listen(port, () => {
     console.log(`Server is served on port ${port}`);
